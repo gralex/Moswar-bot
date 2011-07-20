@@ -10,4 +10,5 @@ $m->setLoginData( '' , '' );
 if(!$m->isLoged())
         $m->loginToMoswar();
 
-echo $m->goToPage('');
+$a = new moswarAttack;
+$a->attackByType( 'weak' , 10,11 );
