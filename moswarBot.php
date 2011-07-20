@@ -9,5 +9,7 @@ include('./botCore/cUrlClass.php');
 include('./botCore/simple_html_dom.php');
 include('./botCore/moswarUtils.class.php');
 include('./botCore/moswarBot.class.php');
+include('./botCore/moswarInfo.class.php');
+include('./botCore/moswarAttack.class.php');
 
 $html = new simple_html_dom;
