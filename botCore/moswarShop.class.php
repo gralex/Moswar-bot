@@ -8,7 +8,7 @@ class moswarShop extends moswarUtils{
         $type = 'normal';
         $inputs = array(
             'key' => $key,
-            'action' => $buy,
+            'action' => 'buy',
             'item' => $itemId,
             'amount' => $count,
             'return_url' => '/',
