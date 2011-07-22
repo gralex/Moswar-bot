@@ -31,7 +31,7 @@ class moswarMetro extends moswarUtils{
                 $ret = true;
         
         /* If find % */
-        if(strpos($html->find('div[class=metro-branch]',0)->innertext,'%') !== false)
+        if(strpos(@$html->find('div[class=metro-branch]',0)->innertext,'%') !== false)
                 $ret = true;
         
         /* If the timer link is to metro */
