@@ -12,39 +12,44 @@ class moswarBot extends moswarUtils{
     
     public function setCookiesPath( $path )
     {
-        define( "MOSWAR_S_CPATH" , $path );
+        global $wb;
+        $wb->setCookiesPath( $path );
     }
     
     public function setInterface( $interface )
     {
-        define( 'MOSWAR_S_INTERFACE' , $interface );
+        global $wb;
+        $wb->setInterface( $interface );
     }
     
     public function setUserAgent( $uAgent )
     {
-        define( 'MOSWAR_S_BROWSER' , $uAgent );
+        global $wb;
+        $wb->setBrowser( $uAgent );
     }
     
     public function setMainUrl( $mUrl )
     {
-        define( 'MOSWAR_S_MAINURL' , $mUrl );
+        global $wb;
+        $wb->setMainUrl( $mUrl );
     }
     
     public function loginToMoswar()
     { 
+        global $wb;
         $inputs = array(
             'action' => 'login',
             'email' => $this->username,
             'password' => $this->password,
             'remember' => 1
         );
-        $this->sendPostData( '' , $inputs );
+        $wb->sendPostData( '' , $inputs );
     }
     
     public function isLoged()
     {
-        global $html;
-        $html->load( $this->goToPage('player/') );
+        global $wb , $html;
+        $html->load( $wb->goToPage('player/') );
         if($html->find('a[href*=phone]',0))
             return true;
         else

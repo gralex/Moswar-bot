@@ -4,27 +4,29 @@ class moswarMetro extends moswarUtils{
     
     public function metroWork()
     {
+        global $wb;
         $inputs = array(
             'action' => 'work'
         ); 
-        $this->sendPostData( 'metro/' , $inputs );
+        $wb->sendPostData( 'metro/' , $inputs );
     }
     
     public function metroDig()
     {
+        global $wb;
         $inputs = array(
             'action' => 'dig'
         );
-        $this->sendPostData( 'metro/' , $inputs );
+        $wb->sendPostData( 'metro/' , $inputs );
     }
     
     public function metroNeedDig()
     {
-        global $html;
+        global $wb , $html;
         
         $ret = false;
         
-        $html->load( $this->goToPage('metro/') );
+        $html->load( $wb->goToPage('metro/') );
         
         /* If rat */
         if($html->find('div[id=welcome-rat]',0)->style == 'display:block;')
@@ -41,18 +43,42 @@ class moswarMetro extends moswarUtils{
         return $ret;
     }
     
+    public function ratAviable()
+    {
+        global $wb , $html;
+        $html->load( $wb->goToPage('metro/') );
+        if($html->find('div[id=welcome-rat]',0)->style == 'display:block;')
+            return true;
+        else
+            return false;
+    }
+    
+    public function attackRat()
+    {
+        global $wb;
+        $inputs = array(
+            'player' => PLAYER_ID
+        );
+        $wb->sendPostData( 'alley/attack-npc/1/' , $inputs );
+    }
+    
     public function playWithMony( $sumToPlay )
     {
-        $this->goToPage( 'thimble/start/' );
+        global $wb , $html;
+        $pageStartMoney = $wb->goToPage( 'thimble/start/' );
+        
+        if(strpos( $pageStartMoney , 'thimble/play/9/' ) === false)
+                return false;
         
         for($i = 0; $i < floor( $sumToPlay / 1500 ) ; $i++)
         {
-            $this->goToPage( 'thimble/play/9/' );
-            $this->goToPage( 'thimble/guess/0/' );  
-            $this->goToPage( 'thimble/guess/4/' );
-	    $this->goToPage( 'thimble/guess/8/' );
+            $wb->goToPage( 'thimble/play/9/' );
+            $wb->goToPage( 'thimble/guess/0/' );  
+            $wb->goToPage( 'thimble/guess/4/' );
+	    $wb->goToPage( 'thimble/guess/8/' );
         }
         
-        $this->goToPage( 'thimble/leave/' );
+        $wb->goToPage( 'thimble/leave/' );
+        return true;
     }
 }
