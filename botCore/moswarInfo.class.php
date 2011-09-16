@@ -25,7 +25,7 @@ class moswarInfo extends moswarUtils{
         $playerIdTmp = str_replace( '/' , '' , $html->find('h3[class=curves clear] a[href*=player]',0)->href );
         $res['playerId'] = str_replace( 'player' , '' , $playerIdTmp );
         
-        $res['money'] = str_replace(',' , '' , $html->find('span[rel=money]',0)->innertext );
+        $res['money'] = str_replace(',' , '' , $html->find('li[class=tugriki-block] span',1)->innertext );
         $res['ore'] = str_replace(',' , '' , $html->find('span[rel=ore]',0)->innertext );
         $res['oil'] = str_replace(',' , '' , $html->find('span[rel=oil]',0) ? $html->find('span[rel=oil]',0)->innertext : 0 );
          return $res;
