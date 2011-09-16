@@ -81,4 +81,15 @@ class moswarMetro extends moswarUtils{
         $wb->goToPage( 'thimble/leave/' );
         return true;
     }
+    
+    public function leaveMony()
+    {
+        global $wb;
+        
+        $wb->goToPage( 'thimble/guess/0/' );  
+        $wb->goToPage( 'thimble/guess/4/' );
+	$wb->goToPage( 'thimble/guess/8/' );
+    
+        $wb->goToPage( 'thimble/leave/' );
+    }
 }
