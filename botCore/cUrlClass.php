@@ -55,12 +55,26 @@ class cUrlClass{
         curl_setopt($this->ch,CURLOPT_FOLLOWLOCATION,true);
         curl_setopt($this->ch,CURLOPT_COOKIEJAR,$this->cookies_path);
         curl_setopt($this->ch,CURLOPT_COOKIEFILE,$this->cookies_path);
-        curl_setopt($this->ch,CURLOPT_CONNECTTIMEOUT, 7);
+        curl_setopt($this->ch,CURLOPT_CONNECTTIMEOUT, 15);
 	if(strlen($this->intf) > 0)
         {
             curl_setopt($this->ch,CURLOPT_INTERFACE,$this->intf);
         }
           $tmpPage = curl_exec($this->ch);
+          
+          if(ENABLE_ANTI_CAPTCHA)
+          {
+              if(strpos( $tmpPage , 'showCaptcha' ))
+              {
+                $cName = $this->__saveCaptcha();
+              
+                /* Decode captcha */
+                $this->__decodeCaptcha( $cName );
+                return $this->goToPage($url);
+              }
+          }
+          
+          
           if(strpos( $tmpPage , 'А-а-а-а-а-а!!! Все сломалось!' ) === false)
           {
               return $tmpPage;
@@ -87,13 +101,26 @@ class cUrlClass{
         curl_setopt($this->ch,CURLOPT_POSTFIELDS,$post_data);
 	curl_setopt($this->ch,CURLOPT_COOKIEJAR,$this->cookies_path);
 	curl_setopt($this->ch,CURLOPT_COOKIEFILE,$this->cookies_path);
-        curl_setopt($this->ch,CURLOPT_CONNECTTIMEOUT, 7);
+        curl_setopt($this->ch,CURLOPT_CONNECTTIMEOUT, 15);
 	if(strlen($this->intf) > 0)
         {
            curl_setopt($this->ch,CURLOPT_INTERFACE,$this->intf);
         }
         
         $tmpPage = curl_exec($this->ch);
+        
+        if(ENABLE_ANTI_CAPTCHA)
+          {
+              if(strpos( $tmpPage , 'showCaptcha' ))
+              {
+                $cName = $this->__saveCaptcha();
+              
+                /* Decode captcha */
+                $this->__decodeCaptcha( $cName );
+                return $this->goToPage($url);
+              }
+          }
+          
           if(strpos( $tmpPage , 'А-а-а-а-а-а!!! Все сломалось!' ) === false)
           {
               return $rt ? $tmpPage : null;
@@ -102,6 +129,50 @@ class cUrlClass{
           {
               return $this->sendPostData($url , $data , $rt);
           }
+    }
+    
+    public function saveCaptcha( $url , $captchaPath )
+    {
+        if(BOT_DEBUG)
+            echo "SAVE: ".$url."\n";
+        
+        curl_setopt($this->ch,CURLOPT_URL,$this->main_url.$url);
+        curl_setopt($this->ch,CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($this->ch,CURLOPT_USERAGENT,$this->browser);
+	curl_setopt($this->ch,CURLOPT_FOLLOWLOCATION,true);
+        curl_setopt($this->ch,CURLOPT_COOKIEJAR,$this->cookies_path);
+	curl_setopt($this->ch,CURLOPT_COOKIEFILE,$this->cookies_path);
+        curl_setopt($this->ch,CURLOPT_CONNECTTIMEOUT, 15);
+        if(strlen($this->intf) > 0)
+        {
+           curl_setopt($this->ch,CURLOPT_INTERFACE,$this->intf);
+        }
+        
+        $rawData = curl_exec( $this->ch );
+        
+        if(strpos( $rawData , 'А-а-а-а-а-а!!! Все сломалось!' ) !== false)
+          {
+              $rawData = $this->saveCaptcha($url, $captchaPath);
+          }
+        
+        $f = fopen( $captchaPath , 'w+' );
+        fwrite($f , $rawData);
+        fclose( $f );
+    }
+    
+    private function __saveCaptcha()
+    {
+        $captchaUrl = 'captcha/'.rand(1000, 99999).'/';
+        $savePath = CAPTCHA_PIC_PATH.md5($captchaUrl.time()).'.png';
+        $this->saveCaptcha( $captchaUrl , $savePath );
+         return $savePath;
+    }
+    
+    private function __decodeCaptcha( $path )
+    {
+        global $antiCaptcha;
+        $code = $antiCaptcha->decodeCaptcha( $path );
+        $this->sendPostData( 'captcha/' , array( 'action' => 'check_captcha' , 'code' => $code ) );
     }
     
     public function getRequestInfo()
