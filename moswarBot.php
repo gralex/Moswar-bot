@@ -6,6 +6,7 @@ error_reporting (E_ALL | E_STRICT);
 ini_set("display_errors", 1); 
 
 define("BOT_DEBUG" , 0);
+define("ENABLE_ANTI_CAPTCHA" , 0);
 define("CAPTCHA_PIC_PATH" , '/var/www/moswar/');
 
 include('botCore/antiCaptcha.class.php');
