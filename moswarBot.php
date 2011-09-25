@@ -23,6 +23,7 @@ include('botCore/moswarFactory.class.php');
 include('botCore/moswarPolice.class.php');
 include('botCore/moswarAutomobile.class.php');
 include('botCore/moswarInventory.class.php');
+include('botCore/moswarAnimals.class.php');
 
 $html = new simple_html_dom;
 
