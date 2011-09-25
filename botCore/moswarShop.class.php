@@ -17,9 +17,10 @@ class moswarShop extends moswarUtils{
             'key' => $key,
             'action' => 'buy',
             'item' => $itemId,
-            'amount' => $count,
+            //'amount' => $count,
             'return_url' => '/',
-            'type' => $type
+            //'type' => $type,
+            'ajax_ext' => 1
         );
         $wb->sendPostData( 'shop/' , $inputs );
     }
@@ -52,9 +53,8 @@ class moswarShop extends moswarUtils{
     {
         global $wb , $html;
         $html->load( $wb->goToPage('shop/') );
-        $tmp = $html->find('span[onclick*=shopBuyItem]',0)->onclick;
-        $tmp2 = explode( "'" , $tmp );
+        $tmp = $html->find('span[data-return_url*=shop]',0)->{'data-key'};
         
-        $this->key = $tmp2[1];
+        $this->key = $tmp;
     }
 }
