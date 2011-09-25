@@ -4,6 +4,7 @@ class moswarAnimal extends moswarUtils{
     protected $quality;
     protected $animalId = 0;
     protected $sKey = null;
+    protected $trainTime = 0;
     
     function __construct( $animalId ) {
         $this->animalId = $animalId;
@@ -15,21 +16,21 @@ class moswarAnimal extends moswarUtils{
     {
         $this->quality = 'focus';
         
-        return $this->train();
+        $this->train();
     }
     
     public function trainLoyalty()
     {
         $this->quality = 'loyality';
         
-        return $this->train();
+        $this->train();
     }
     
     public function trainSolidity()
     {
         $this->quality = 'mass';
         
-        return $this->train();
+        $this->train();
     }
     
     protected function train()
@@ -48,9 +49,14 @@ class moswarAnimal extends moswarUtils{
         
         if($sRes['result'] == 1)
         {
-            return (int)$sRes['pet']['lasttrainduration'];
+            $this->trainTime = (int)$sRes['pet']['lasttrainduration'];
         }
         else
-            return 0;
+            $this->trainTime = 0;
+    }
+    
+    public function getTrainTime()
+    {
+        return $this->trainTime;
     }
 }
